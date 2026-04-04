@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
+<title>StudyHub Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:linear-gradient(125deg,#0a0f2a 0%,#0a1a2e 40%,#0b1120 100%);background-attachment:fixed;color:#f0f3fa;min-height:100vh}
+.glass{background:rgba(12,20,35,.72);backdrop-filter:blur(14px);border:1px solid rgba(59,130,246,.3);border-radius:1.5rem}
+.glass-card{background:rgba(18,28,48,.78);backdrop-filter:blur(12px);border-radius:1.5rem;border:1px solid rgba(59,130,246,.4);transition:transform .2s,box-shadow .2s}
+.glass-card:hover{transform:translateY(-3px);box-shadow:0 15px 25px -10px rgba(0,0,0,.35);border-color:#60a5fa}
+.nav-bd{border:1px solid rgba(59,130,246,.3);border-radius:3rem;background:rgba(0,0,0,.2);padding:.3rem}
+.sec-bd{border:1px solid rgba(59,130,246,.2);border-radius:1.5rem;padding:.5rem}
+.btn-neon{background:linear-gradient(90deg,#3b82f6,#a855f7);border:none;border-radius:3rem;padding:.5rem 1.5rem;font-weight:600;color:#fff;transition:all .2s;box-shadow:0 2px 8px rgba(59,130,246,.3);cursor:pointer;display:inline-block}
+.btn-neon:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(59,130,246,.5)}
+.btn-gl{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.2);border-radius:3rem;padding:.4rem 1.2rem;color:#cbd5e1;transition:.2s;cursor:pointer;display:inline-block}
+.btn-gl:hover{background:rgba(59,130,246,.3);border-color:#3b82f6;color:#fff}
+.fg{background:rgba(0,0,0,.5);border:1px solid #334155;border-radius:2rem;padding:.5rem 1rem;color:#fff;width:100%}
+.fg:focus{border-color:#3b82f6;outline:none;box-shadow:0 0 0 2px rgba(59,130,246,.2)}
+textarea.fg{border-radius:1rem;resize:vertical}
+select.fg option{background:#0f172a}
+.sub-card{background:linear-gradient(145deg,rgba(30,41,59,.7),rgba(15,23,42,.9));border-radius:1.3rem;border:1px solid #334155;transition:all .2s;cursor:pointer}
+.sub-card:hover{transform:translateY(-5px);border-color:#60a5fa}
+.tech-tab{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);padding:.5rem 1.3rem;border-radius:2rem;color:#94a3b8;font-weight:500;transition:all .2s;cursor:pointer}
+.tech-tab.active{background:linear-gradient(120deg,#3b82f6,#8b5cf6);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(59,130,246,.4)}
+.tech-tab:hover:not(.active){background:rgba(59,130,246,.2);color:#fff;border-color:#3b82f6}
+.syl-tree details{background:rgba(0,0,0,.2);border-radius:1rem;padding:.6rem 1rem;margin-bottom:.8rem;border-left:3px solid #3b82f6}
+.syl-tree summary{font-weight:600;cursor:pointer;color:#a5b4fc}
+.tog{width:40px;height:20px;background:#334155;border-radius:20px;display:inline-block;position:relative;cursor:pointer;transition:.2s;flex-shrink:0;vertical-align:middle}
+.tog.on{background:#3b82f6}
+.tog::after{content:'';width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:2px;left:3px;transition:.2s}
+.tog.on::after{left:21px}
+.tbl th,.tbl td{border-color:#334155;color:#e2e8f0;padding:.45rem .5rem;vertical-align:middle}
+.cp{padding:.8rem!important}
+.pw-w{position:relative}
+.pw-w input{padding-right:2.8rem}
+.pw-eye{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;padding:0;font-size:1rem}
+.pw-eye:hover{color:#60a5fa}
+.chpw{background:rgba(15,23,42,.9);border:1px solid rgba(59,130,246,.3);border-radius:1.2rem;padding:1rem;margin-bottom:1rem}
+.q-dot{width:30px;height:30px;border-radius:50%;font-size:.75rem;border:none;cursor:pointer;background:#334155;color:#fff;flex-shrink:0}
+.q-dot.ans{background:#22c55e}.q-dot.cur{background:#3b82f6}
+.blocked{background:rgba(239,68,68,.13);border:1px solid #ef4444;border-radius:1rem;padding:1rem;text-align:center;color:#fca5a5;margin:1rem 0}
+.sol-box{background:rgba(59,130,246,.09);border-left:3px solid #3b82f6;border-radius:.6rem;padding:.6rem .8rem;margin-top:.6rem}
+.res-card{border-radius:1rem;padding:.7rem 1rem;margin-bottom:.6rem;border:1px solid #334155;background:rgba(15,23,42,.7)}
+.res-card.correct{border-color:#22c55e;background:rgba(34,197,94,.07)}
+.res-card.wrong{border-color:#ef4444;background:rgba(239,68,68,.07)}
+.res-card.skipped{border-color:#475569;background:rgba(71,85,105,.1)}
+.pdf-wrap{background:#1e293b;border-radius:.8rem;text-align:center;overflow:auto}
+.pdf-wrap canvas{max-width:100%;display:block;margin:0 auto}
+.pdf-nav{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.4rem;background:rgba(0,0,0,.3);border-radius:0 0 .8rem .8rem}
+hr{background-color:#334155}
+/* performance overlay */
+#perfOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10000;overflow-y:auto}
+</style>
+</head>
+<body>
+<div class="container py-3">
+
+<!-- LOGIN -->
+<div id="pgLogin" class="row justify-content-center align-items-center min-vh-100">
+ <div class="col-md-5 col-lg-4">
+  <div class="glass p-4 text-center">
+   <i class="bi bi-cpu fs-1 text-primary"></i>
+   <h2 class="fw-bold mt-2" style="background:linear-gradient(135deg,#60a5fa,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent">StudyHub Pro</h2>
+   <p class="text-muted small">Next-gen learning platform</p>
+   <form id="loginForm">
+    <input type="text" id="lUser" class="fg mb-2" placeholder="Username" required>
+    <div class="pw-w mb-3"><input type="password" id="lPass" class="fg" placeholder="Password" required><button type="button" class="pw-eye" onclick="tPw('lPass',this)"><i class="bi bi-eye"></i></button></div>
+    <button type="submit" class="btn-neon w-100">Login</button>
+    <hr class="my-3"><a href="#" id="goReg" class="small">Create student account</a>
+   </form>
+   <form id="regForm" style="display:none">
+    <input type="text" id="rUser" class="fg mb-2" placeholder="Username" required>
+    <div class="pw-w mb-2"><input type="password" id="rPass" class="fg" placeholder="Password" required><button type="button" class="pw-eye" onclick="tPw('rPass',this)"><i class="bi bi-eye"></i></button></div>
+    <div class="pw-w mb-3"><input type="password" id="rPass2" class="fg" placeholder="Confirm Password" required><button type="button" class="pw-eye" onclick="tPw('rPass2',this)"><i class="bi bi-eye"></i></button></div>
+    <button type="submit" class="btn-neon w-100">Register</button>
+    <a href="#" id="goLogin" class="small d-block mt-2">&larr; Back to Login</a>
+   </form>
+   <div id="loginMsg" class="mt-3"></div>
+  </div>
+ </div>
+</div>
+
+<!-- STUDENT DASHBOARD -->
+<div id="pgStu" style="display:none">
+ <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h3 class="fw-bold" style="background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;background-clip:text;color:transparent"><i class="bi bi-mortarboard-fill"></i> Student Hub</h3>
+  <div class="d-flex gap-2 flex-wrap">
+   <button id="btnStuChPw" class="btn-gl btn-sm"><i class="bi bi-key"></i> Change Password</button>
+   <button id="btnStuRefresh" class="btn-gl btn-sm"><i class="bi bi-arrow-repeat"></i></button>
+   <button id="btnStuLogout" class="btn-gl btn-sm">Logout</button>
+  </div>
+ </div>
+ <div id="stuPwBox" class="chpw" style="display:none">
+  <h6 class="mb-3"><i class="bi bi-shield-lock"></i> Change Password</h6>
+  <div class="row g-2">
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="sCurPw" class="fg" placeholder="Current Password"><button type="button" class="pw-eye" onclick="tPw('sCurPw',this)"><i class="bi bi-eye"></i></button></div></div>
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="sNewPw" class="fg" placeholder="New Password"><button type="button" class="pw-eye" onclick="tPw('sNewPw',this)"><i class="bi bi-eye"></i></button></div></div>
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="sCfPw" class="fg" placeholder="Confirm Password"><button type="button" class="pw-eye" onclick="tPw('sCfPw',this)"><i class="bi bi-eye"></i></button></div></div>
+  </div>
+  <div class="d-flex gap-2 mt-2"><button class="btn-neon btn-sm" onclick="stuChPw()">Update</button><button class="btn-gl btn-sm" onclick="hide('stuPwBox')">Cancel</button></div>
+  <div id="stuPwMsg" class="mt-1"></div>
+ </div>
+ <div class="sec-bd p-3 mb-4">
+  <div class="row g-2">
+   <div class="col-md-6"><label class="small">Branch</label><select id="sBranch" class="fg"></select></div>
+   <div class="col-md-6"><label class="small">Semester</label><select id="sSem" class="fg"></select></div>
+  </div>
+ </div>
+ <div id="subGrid" class="row g-3 mb-4"></div>
+ <div id="subDetail" style="display:none">
+  <div class="d-flex gap-2 mb-2 flex-wrap">
+   <button id="btnBack" class="btn-gl btn-sm"><i class="bi bi-arrow-left"></i> Back</button>
+   <h4 id="subName" class="mb-0"></h4>
+  </div>
+  <div class="nav-bd mb-3 d-flex flex-wrap gap-1 justify-content-center" id="stuTabs"></div>
+  <div id="stuContent"></div>
+ </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="pgAdm" style="display:none">
+ <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h3 class="fw-bold" style="background:linear-gradient(135deg,#f97316,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent"><i class="bi bi-shield-lock-fill"></i> Admin Console</h3>
+  <div class="d-flex gap-2"><button id="btnAdmChPw" class="btn-gl btn-sm"><i class="bi bi-key"></i> Change Password</button><button id="btnAdmLogout" class="btn-gl btn-sm">Logout</button></div>
+ </div>
+ <div id="admPwBox" class="chpw" style="display:none">
+  <h6 class="mb-3"><i class="bi bi-shield-lock"></i> Change Admin Password</h6>
+  <div class="row g-2">
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="aCurPw" class="fg" placeholder="Current Password"><button type="button" class="pw-eye" onclick="tPw('aCurPw',this)"><i class="bi bi-eye"></i></button></div></div>
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="aNewPw" class="fg" placeholder="New Password"><button type="button" class="pw-eye" onclick="tPw('aNewPw',this)"><i class="bi bi-eye"></i></button></div></div>
+   <div class="col-md-4"><div class="pw-w"><input type="password" id="aCfPw" class="fg" placeholder="Confirm Password"><button type="button" class="pw-eye" onclick="tPw('aCfPw',this)"><i class="bi bi-eye"></i></button></div></div>
+  </div>
+  <div class="d-flex gap-2 mt-2"><button class="btn-neon btn-sm" onclick="admChPw()">Update</button><button class="btn-gl btn-sm" onclick="hide('admPwBox')">Cancel</button></div>
+  <div id="admPwMsg" class="mt-1"></div>
+ </div>
+ <div class="nav-bd mb-3 d-flex flex-wrap gap-1 justify-content-center" id="admTabBar">
+  <button class="btn-neon btn-sm px-3" data-tab="tBranches">&#127963; Branches</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tSems">&#128197; Semesters</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tSubjects">&#128218; Subjects</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tSyllabus">&#128214; Syllabus</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tUpload">&#128100; Upload</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tManage">&#128193; Manage</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tTests">&#9999; Tests</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tStudents">&#128101; Students</button>
+  <button class="btn-gl btn-sm px-3" data-tab="tResults">&#128202; Results</button>
+ </div>
+ <div id="admContent">
+  <div id="tBranches" class="adm-tab"><div class="glass-card cp"><h5>Branches</h5><div id="brList" class="mb-2"></div><div class="d-flex gap-2"><input id="nBranch" class="fg" placeholder="Branch name"><button id="addBrBtn" class="btn-neon btn-sm">Add</button></div></div></div>
+  <div id="tSems" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Semesters</h5><div id="smList" class="mb-2"></div><div class="d-flex gap-2"><input id="nSem" class="fg" placeholder="e.g. Semester 3"><button id="addSmBtn" class="btn-neon btn-sm">Add</button></div></div></div>
+  <div id="tSubjects" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Subjects</h5><div class="row g-2"><div class="col-md-4"><select id="subBr" class="fg"></select></div><div class="col-md-4"><select id="subSm" class="fg"></select></div><div class="col-md-4"><input id="nSubj" class="fg" placeholder="Subject name"><button id="addSubjBtn" class="btn-neon mt-1 w-100 btn-sm">Add</button></div></div><div id="subjList" class="mt-2"></div></div></div>
+  <div id="tSyllabus" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Syllabus Builder</h5><div class="row g-2 mb-2"><div class="col-md-4"><select id="sylBr" class="fg"></select></div><div class="col-md-4"><select id="sylSm" class="fg"></select></div><div class="col-md-4"><select id="sylSub" class="fg"></select></div></div><div id="sylEditor"></div><button id="saveSylBtn" class="btn-neon mt-2 btn-sm">Save Syllabus</button><div id="sylMsg"></div></div></div>
+  <div id="tUpload" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Upload Material</h5><form id="upForm"><div class="row g-2"><div class="col-md-3"><select id="upBr" class="fg" required></select></div><div class="col-md-3"><select id="upSm" class="fg" required></select></div><div class="col-md-3"><select id="upSub" class="fg" required></select></div><div class="col-md-3"><select id="upCat" class="fg" required><option value="notes">Notes</option><option value="pyq">PYQ</option><option value="lab">Lab</option><option value="video">Video</option></select></div><div class="col-md-6"><input id="upTitle" class="fg" placeholder="Title" required></div><div class="col-md-6"><input type="file" id="upFile" class="fg" required></div><div class="col-12"><label class="d-flex align-items-center gap-2 small"><input type="checkbox" id="upDl" checked> Allow Download</label></div><div class="col-12"><button type="submit" class="btn-neon btn-sm">Upload</button></div></div></form><div id="upMsg"></div></div></div>
+  <div id="tManage" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Manage Materials</h5><div class="row g-2 mb-2"><div class="col-md-3"><select id="mgBr" class="fg"></select></div><div class="col-md-3"><select id="mgSm" class="fg"></select></div><div class="col-md-3"><select id="mgSub" class="fg"></select></div><div class="col-md-3"><button id="mgRefBtn" class="btn-gl btn-sm">Refresh</button></div></div><div id="mgTable"></div></div></div>
+
+  <!-- TESTS TAB -->
+  <div id="tTests" class="adm-tab" style="display:none">
+   <div class="glass-card cp mb-3">
+    <h5 id="testFTitle">Create MCQ Test</h5>
+    <form id="testForm">
+     <input type="hidden" id="editTId">
+     <div class="row g-2 mb-2">
+      <div class="col-md-6"><label class="small">Test Title</label><input id="tTitle" class="fg" placeholder="e.g. Unit Test 1" required></div>
+      <div class="col-md-3"><label class="small">Branch</label><select id="tBr" class="fg"></select></div>
+      <div class="col-md-3"><label class="small">Semester</label><select id="tSm" class="fg"></select></div>
+      <div class="col-md-6"><label class="small">Subject</label><select id="tSub" class="fg"></select></div>
+      <div class="col-md-3"><label class="small">Duration (mins, 0&nbsp;=&nbsp;no limit)</label><input type="number" id="tDur" class="fg" min="0" value="0"></div>
+      <div class="col-md-3"><label class="small">Negative marks per wrong answer</label><input type="number" id="tNeg" class="fg" step="0.25" min="0" value="0"></div>
+      <div class="col-md-3"><label class="small">Marks per correct answer</label><input type="number" id="tMpq" class="fg" step="0.5" min="0.5" value="1"></div>
+      <div class="col-md-3"><label class="small d-block mb-1">Partial Marking</label><div class="tog" id="togPart"></div></div>
+      <div class="col-md-3"><label class="small d-block mb-1">Shuffle Questions</label><div class="tog" id="togShuf"></div></div>
+      <div class="col-md-6"><label class="small">Network Mode</label><select id="tNet" class="fg"><option value="any">No restriction</option><option value="offline">Airplane / Offline only</option><option value="online">Online only</option></select></div>
+     </div>
+     <div id="qWrap"></div>
+     <div class="d-flex gap-2 mt-2 flex-wrap">
+      <button type="button" id="addQBtn" class="btn-gl btn-sm">+ Add Question</button>
+      <button type="submit" class="btn-neon btn-sm" id="tSubmitBtn">Publish Test</button>
+      <button type="button" id="cancelEditBtn" class="btn-gl btn-sm" style="display:none">Cancel Edit</button>
+     </div>
+    </form>
+    <div id="testFMsg" class="mt-1"></div>
+   </div>
+   <div class="glass-card cp"><h5>Published Tests</h5><div id="pubTests"></div></div>
+  </div>
+
+  <div id="tStudents" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Student Management</h5><div id="stuTbl"></div></div></div>
+  <div id="tResults" class="adm-tab" style="display:none"><div class="glass-card cp"><h5>Test Results</h5><div class="row g-2 mb-2"><div class="col-md-3"><select id="resBr" class="fg"></select></div><div class="col-md-3"><select id="resSm" class="fg"></select></div><div class="col-md-3"><select id="resSub" class="fg"></select></div><div class="col-md-3"><select id="resTest" class="fg"></select></div></div><button onclick="renderResults()" class="btn-gl btn-sm mb-2">Load Results</button><div id="resTable"></div></div></div>
+ </div>
+</div>
+
+<!-- TEST MODAL -->
+<div id="testModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;overflow-y:auto">
+ <div class="container py-4">
+  <div class="glass p-3">
+   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h5 id="tModalTitle"></h5>
+    <div class="d-flex align-items-center gap-3">
+     <span id="timerEl" class="badge bg-warning text-dark fs-6" style="display:none"></span>
+     <button onclick="closeTest()" class="btn-gl btn-sm">&#10005; Close</button>
+    </div>
+   </div>
+   <div id="tModalBody"></div>
+   <div class="d-flex justify-content-between mt-3 flex-wrap gap-2">
+    <div id="qNav" class="d-flex flex-wrap gap-1"></div>
+    <button id="submitTestBtn" class="btn-neon btn-sm">Submit Test</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- PERFORMANCE OVERLAY -->
+<div id="perfOverlay">
+ <div class="container py-4">
+  <div class="glass p-3">
+   <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5><i class="bi bi-bar-chart-line-fill"></i> <span id="perfTitle"></span></h5>
+    <button onclick="hide('perfOverlay')" class="btn-gl btn-sm">&#10005; Close</button>
+   </div>
+   <div id="perfBody"></div>
+  </div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const pdfjsLib=window['pdfjs-dist/build/pdf'];
+if(pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const G=k=>JSON.parse(localStorage.getItem(k)||'[]');
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+(function init(){
+  if(!localStorage.getItem('branches'))S('branches',[{id:1,name:'Computer Science'},{id:2,name:'Civil Engineering'}]);
+  if(!localStorage.getItem('semesters'))S('semesters',[{id:1,name:'Semester 3'},{id:2,name:'Semester 4'},{id:3,name:'Semester 5'}]);
+  ['subjects','syllabus','materials','tests','results'].forEach(k=>{if(!localStorage.getItem(k))S(k,[]);});
+  if(!localStorage.getItem('users'))S('users',[{id:1,username:'admin',password:'admin123',role:'admin'}]);
+})();
+
+let CU=null,curSub=null,curCat='syllabus';
+let AT=null,timerInt=null,stuAns=[],curQ=0;
+const maxId=arr=>arr.length?Math.max(...arr.map(x=>x.id||0)):0;
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s){if(!s&&s!==0)return'';return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function fmsg(id,txt,type){let d=document.getElementById(id);if(d){d.innerHTML=`<div class="alert alert-${type} py-2 small mt-1">${txt}</div>`;setTimeout(()=>{if(d)d.innerHTML='';},3500);}}
+function show(id){let el=document.getElementById(id);if(el)el.style.display='block';}
+function hide(id){let el=document.getElementById(id);if(el)el.style.display='none';}
+function toggle(id){let el=document.getElementById(id);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+function tPw(id,btn){let el=document.getElementById(id);if(!el)return;el.type=el.type==='password'?'text':'password';btn.innerHTML=el.type==='password'?'<i class="bi bi-eye"></i>':'<i class="bi bi-eye-slash"></i>';}
+
+// ── SELECT HELPERS ────────────────────────────────────────────────────────────
+function fBr(el,empty=true){let b=G('branches');el.innerHTML=(empty?'<option value="">-- Branch --</option>':'')+b.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');}
+function fSm(el,empty=true){let s=G('semesters');el.innerHTML=(empty?'<option value="">-- Semester --</option>':'')+s.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');}
+function fSub(bId,sId,el,empty=true){let s=G('subjects').filter(x=>x.branchId==bId&&x.semesterId==sId);el.innerHTML=(empty?'<option value="">-- Subject --</option>':'')+s.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');}
+
+// ── PDF PREVIEW ───────────────────────────────────────────────────────────────
+async function renderPDF(b64,wrapId){
+  let wrap=document.getElementById(wrapId);if(!wrap||!pdfjsLib)return;
+  try{
+    let bin=atob(b64.split(',')[1]),arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    let pdf=await pdfjsLib.getDocument({data:arr}).promise,total=pdf.numPages,cur=1;
+    async function draw(n){
+      let page=await pdf.getPage(n),vp=page.getViewport({scale:1.5});
+      let cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;cv.style.maxWidth='100%';
+      await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
+      let w=document.getElementById(wrapId);if(!w)return;
+      w.innerHTML='';let cw=document.createElement('div');cw.className='pdf-wrap';cw.appendChild(cv);w.appendChild(cw);
+      if(total>1){
+        let nav=document.createElement('div');nav.className='pdf-nav';
+        nav.innerHTML=`<button class="btn-gl btn-sm" id="pp${wrapId}" ${n<=1?'disabled':''}>&lsaquo;</button><span class="small">Page ${n}/${total}</span><button class="btn-gl btn-sm" id="np${wrapId}" ${n>=total?'disabled':''}>&rsaquo;</button>`;
+        w.appendChild(nav);
+        document.getElementById('pp'+wrapId)?.addEventListener('click',()=>{if(cur>1){cur--;draw(cur);}});
+        document.getElementById('np'+wrapId)?.addEventListener('click',()=>{if(cur<total){cur++;draw(cur);}});
+      }
+    }
+    draw(cur);
+  }catch(e){let w=document.getElementById(wrapId);if(w)w.innerHTML=`<div class="text-danger small p-2">PDF error: ${esc(e.message)}</div>`;}
+}
+function mkPreview(m,cid){
+  if(!m||!m.fileData)return'<div class="text-muted small">No file</div>';
+  let ext=(m.fileName||'').split('.').pop().toLowerCase();
+  let lock=m.allowDownload===false?'<span class="badge bg-danger d-block mb-1"><i class="bi bi-lock-fill"></i> Download Disabled</span>':'';
+  let inner='';
+  if(ext==='pdf')inner=`<div id="${cid}" style="min-height:120px" class="d-flex align-items-center justify-content-center"><span class="text-muted small"><i class="bi bi-hourglass-split"></i> Loading PDF…</span></div>`;
+  else if(['jpg','jpeg','png','gif','webp','bmp','svg'].includes(ext))inner=`<img src="${m.fileData}" class="img-fluid rounded" style="max-height:280px;width:100%;object-fit:contain">`;
+  else if(['mp4','webm'].includes(ext))inner=`<video controls src="${m.fileData}" class="w-100 rounded" style="max-height:250px"></video>`;
+  else if(['mp3','wav'].includes(ext))inner=`<audio controls src="${m.fileData}" class="w-100 mt-1"></audio>`;
+  else if(['txt','md','csv'].includes(ext)){try{let t=decodeURIComponent(escape(atob(m.fileData.split(',')[1])));inner=`<pre class="bg-dark p-2 rounded small" style="white-space:pre-wrap;max-height:260px;overflow:auto">${esc(t)}</pre>`;}catch(e){inner='<div class="text-muted small">Cannot decode</div>';}}
+  else inner=`<div class="text-muted small p-3 text-center"><i class="bi bi-file-earmark fs-3 d-block"></i>No preview for .${esc(ext)}</div>`;
+  return lock+inner;
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+document.getElementById('loginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  let u=document.getElementById('lUser').value.trim(),p=document.getElementById('lPass').value;
+  let user=G('users').find(x=>x.username===u&&x.password===p);
+  if(!user){fmsg('loginMsg','Invalid credentials','danger');return;}
+  if(user.banned){fmsg('loginMsg','Your account is banned. Contact admin.','danger');return;}
+  CU=user;user.role==='admin'?showAdm():showStu();
+});
+document.getElementById('regForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  let u=document.getElementById('rUser').value.trim(),p=document.getElementById('rPass').value,p2=document.getElementById('rPass2').value;
+  if(p!==p2){fmsg('loginMsg','Passwords do not match','danger');return;}
+  let users=G('users');
+  if(users.find(x=>x.username===u)){fmsg('loginMsg','Username taken','danger');return;}
+  users.push({id:maxId(users)+1,username:u,password:p,role:'student'});
+  S('users',users);fmsg('loginMsg','Registered! Login now.','success');swF('login');
+});
+function swF(w){document.getElementById('loginForm').style.display=w==='login'?'block':'none';document.getElementById('regForm').style.display=w==='reg'?'block':'none';}
+document.getElementById('goReg').onclick=e=>{e.preventDefault();swF('reg');};
+document.getElementById('goLogin').onclick=e=>{e.preventDefault();swF('login');};
+function logout(){CU=null;hide('pgStu');hide('pgAdm');show('pgLogin');swF('login');}
+
+// ── CHANGE PW ─────────────────────────────────────────────────────────────────
+function stuChPw(){
+  let cur=document.getElementById('sCurPw').value,nw=document.getElementById('sNewPw').value,cf=document.getElementById('sCfPw').value;
+  if(!cur||!nw||!cf){fmsg('stuPwMsg','Fill all fields','warning');return;}
+  if(nw!==cf){fmsg('stuPwMsg','Passwords do not match','danger');return;}
+  if(nw.length<4){fmsg('stuPwMsg','Min 4 characters','warning');return;}
+  let us=G('users'),u=us.find(x=>x.id===CU.id);
+  if(!u||u.password!==cur){fmsg('stuPwMsg','Current password incorrect','danger');return;}
+  u.password=nw;S('users',us);CU=u;fmsg('stuPwMsg','Password updated!','success');
+  setTimeout(()=>hide('stuPwBox'),1600);
+}
+function admChPw(){
+  let cur=document.getElementById('aCurPw').value,nw=document.getElementById('aNewPw').value,cf=document.getElementById('aCfPw').value;
+  if(!cur||!nw||!cf){fmsg('admPwMsg','Fill all fields','warning');return;}
+  if(nw!==cf){fmsg('admPwMsg','Passwords do not match','danger');return;}
+  if(nw.length<4){fmsg('admPwMsg','Min 4 characters','warning');return;}
+  let us=G('users'),u=us.find(x=>x.id===CU.id);
+  if(!u||u.password!==cur){fmsg('admPwMsg','Current password incorrect','danger');return;}
+  u.password=nw;S('users',us);CU=u;fmsg('admPwMsg','Password updated!','success');
+  setTimeout(()=>hide('admPwBox'),1600);
+}
+
+// ── STUDENT DASHBOARD ─────────────────────────────────────────────────────────
+function showStu(){
+  hide('pgLogin');show('pgStu');hide('pgAdm');
+  document.getElementById('btnStuLogout').onclick=logout;
+  document.getElementById('btnStuRefresh').onclick=()=>curSub?renderCat():loadSubGrid();
+  document.getElementById('btnStuChPw').onclick=()=>{
+    toggle('stuPwBox');
+    if(document.getElementById('stuPwBox').style.display!=='none')['sCurPw','sNewPw','sCfPw'].forEach(id=>document.getElementById(id).value='');
+  };
+  let bEl=document.getElementById('sBranch'),sEl=document.getElementById('sSem');
+  fBr(bEl,false);fSm(sEl,false);
+  bEl.onchange=loadSubGrid;sEl.onchange=loadSubGrid;loadSubGrid();
+  document.getElementById('btnBack').onclick=()=>{hide('subDetail');show('subGrid');curSub=null;};
+}
+function loadSubGrid(){
+  let bId=document.getElementById('sBranch').value,sId=document.getElementById('sSem').value,g=document.getElementById('subGrid');
+  if(!bId||!sId){g.innerHTML='<div class="col-12 text-center text-muted py-4">&#10024; Select branch &amp; semester</div>';return;}
+  let subs=G('subjects').filter(s=>s.branchId==bId&&s.semesterId==sId);
+  if(!subs.length){g.innerHTML='<div class="col-12">&#128218; No subjects found</div>';return;}
+  g.innerHTML=subs.map(s=>`<div class="col-md-4 col-lg-3"><div class="sub-card p-3" data-id="${s.id}"><i class="bi bi-journal-bookmark-fill fs-2 text-primary"></i><h6 class="mt-2">${esc(s.name)}</h6><p class="small text-muted">Tap to explore &rarr;</p></div></div>`).join('');
+  g.querySelectorAll('.sub-card').forEach(c=>c.addEventListener('click',()=>{
+    let s=G('subjects').find(x=>x.id===parseInt(c.dataset.id));if(s)openSub(s);
+  }));
+}
+function openSub(sub){
+  curSub=sub;hide('subGrid');show('subDetail');
+  document.getElementById('subName').textContent=sub.name;
+  let cats=['syllabus','notes','pyq','lab','video','tests'];
+  let bar=document.getElementById('stuTabs');
+  bar.innerHTML=cats.map(c=>`<button class="tech-tab ${curCat===c?'active':''}" data-c="${c}">${c.toUpperCase()}</button>`).join('');
+  bar.querySelectorAll('.tech-tab').forEach(b=>b.addEventListener('click',()=>{
+    bar.querySelectorAll('.tech-tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');curCat=b.dataset.c;renderCat();
+  }));
+  renderCat();
+}
+function renderCat(){
+  let con=document.getElementById('stuContent');if(!curSub)return;
+  let me=G('users').find(u=>u.id===CU.id)||CU;
+  if(me.blockedMaterials&&curCat!=='tests'&&curCat!=='syllabus'){con.innerHTML='<div class="blocked"><i class="bi bi-slash-circle fs-3"></i><p class="mt-2 mb-0">Materials access restricted by admin.</p></div>';return;}
+  if(me.blockedTests&&curCat==='tests'){con.innerHTML='<div class="blocked"><i class="bi bi-slash-circle fs-3"></i><p class="mt-2 mb-0">Test access restricted by admin.</p></div>';return;}
+  if(curCat==='syllabus'){
+    let syl=G('syllabus').find(s=>s.subjectId===curSub.id);
+    if(!syl||!syl.chapters||!syl.chapters.length){con.innerHTML='<div class="alert alert-info py-2">No syllabus defined.</div>';return;}
+    con.innerHTML='<div class="syl-tree">'+syl.chapters.map(ch=>`<details><summary><i class="bi bi-folder-fill"></i> ${esc(ch.title)}</summary>${(ch.topics||[]).map(t=>`<div style="margin-left:1rem"><strong>&#128204; ${esc(t.title)}</strong>${t.subtopics&&t.subtopics.length?'<ul>'+t.subtopics.map(s=>`<li>${esc(s)}</li>`).join('')+'</ul>':''}</div>`).join('')}</details>`).join('')+'</div>';
+    return;
+  }
+  if(curCat==='tests'){
+    let tests=G('tests').filter(t=>t.subjectId===curSub.id);
+    if(!tests.length){con.innerHTML='<div class="alert alert-secondary">No tests available.</div>';return;}
+    let online=navigator.onLine;
+    let myResults=G('results').filter(r=>r.userId===CU.id);
+    con.innerHTML='<div class="row g-3">'+tests.map(t=>{
+      let ok=true,reason='';
+      let nm=t.networkMode||'any';
+      if(nm==='offline'&&online){ok=false;reason='Enable Airplane Mode to take this test.';}
+      if(nm==='online'&&!online){ok=false;reason='Connect to internet to take this test.';}
+      // find the latest attempt for this test by this student
+      let attempts=myResults.filter(r=>r.testId===t.id).sort((a,b)=>new Date(b.date)-new Date(a.date));
+      let latestAttempt=attempts[0]||null;
+      let actionHtml='';
+      if(!ok){
+        actionHtml=`<span class="badge bg-warning text-dark small d-block mt-2">${esc(reason)}</span>`;
+      } else {
+        // always show Take/Retest button
+        let takeLabel=latestAttempt?'<i class="bi bi-arrow-repeat"></i> Retest':'<i class="bi bi-play-fill"></i> Take Test';
+        actionHtml=`<div class="d-flex gap-2 mt-2 flex-wrap"><button class="btn-neon btn-sm take-t" data-id="${t.id}">${takeLabel}</button>`;
+        if(latestAttempt){
+          let pct=Math.round(latestAttempt.score/latestAttempt.total*100);
+          actionHtml+=`<button class="btn-gl btn-sm view-perf" data-id="${t.id}"><i class="bi bi-bar-chart-line"></i> My Performance <span class="badge ${pct>=50?'bg-success':'bg-danger'} ms-1">${pct}%</span></button>`;
+        }
+        actionHtml+=`</div>`;
+      }
+      let attemptsBadge=attempts.length?`<span class="badge bg-secondary ms-1">${attempts.length} attempt${attempts.length>1?'s':''}</span>`:'';
+      return `<div class="col-md-6"><div class="glass-card p-3">
+        <h6>${esc(t.title)}${attemptsBadge}</h6>
+        <p class="small text-muted mb-1">${t.questions.length} questions${t.duration>0?' &nbsp;|&nbsp; '+t.duration+' min':''}${t.negMarks>0?' &nbsp;|&nbsp; &#8722;'+t.negMarks+'/wrong':''}${t.marksPerQ&&t.marksPerQ!==1?' &nbsp;|&nbsp; '+t.marksPerQ+' marks/Q':''}</p>
+        ${actionHtml}
+      </div></div>`;
+    }).join('')+'</div>';
+    con.querySelectorAll('.take-t').forEach(b=>b.addEventListener('click',()=>startTest(parseInt(b.dataset.id))));
+    con.querySelectorAll('.view-perf').forEach(b=>b.addEventListener('click',()=>showPerformance(parseInt(b.dataset.id))));
+    return;
+  }
+  // materials
+  let mats=G('materials').filter(m=>m.subjectId===curSub.id&&m.category===curCat);
+  if(!mats.length){con.innerHTML='<div class="alert alert-secondary">No materials uploaded yet.</div>';return;}
+  con.innerHTML='<div class="row g-3">'+mats.map(m=>{
+    let cid='pdfC_'+m.id;
+    let dlBtn=m.allowDownload!==false?`<a href="${m.fileData}" download="${esc(m.fileName)}" class="btn-gl btn-sm mt-2 d-inline-block"><i class="bi bi-download"></i> Download</a>`:'';
+    return `<div class="col-md-6"><div class="glass-card p-3"><h6><i class="bi bi-file-earmark-text"></i> ${esc(m.title)}</h6><div class="mt-2">${mkPreview(m,cid)}</div>${dlBtn}</div></div>`;
+  }).join('')+'</div>';
+  mats.forEach(m=>{
+    if((m.fileName||'').split('.').pop().toLowerCase()==='pdf')requestAnimationFrame(()=>renderPDF(m.fileData,'pdfC_'+m.id));
+  });
+}
+
+// ── PERFORMANCE VIEW ──────────────────────────────────────────────────────────
+function showPerformance(testId){
+  let test=G('tests').find(t=>t.id===testId);
+  let attempts=G('results').filter(r=>r.userId===CU.id&&r.testId===testId).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(!attempts.length||!test){return;}
+  document.getElementById('perfTitle').textContent='Performance: '+test.title;
+  let html='';
+  attempts.forEach((r,ai)=>{
+    let pct=r.total>0?Math.round(r.score/r.total*100):0;
+    html+=`<div class="glass-card p-3 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+          <span class="fw-semibold">Attempt ${attempts.length-ai}</span>
+          <span class="text-muted small ms-2">${new Date(r.date).toLocaleString()}</span>
+        </div>
+        <div>
+          <span class="fs-5 fw-bold ${pct>=50?'text-success':'text-danger'}">${typeof r.score==='number'?r.score.toFixed(2):r.score} / ${r.total}</span>
+          <span class="badge ${pct>=50?'bg-success':'bg-danger'} ms-2">${pct}%</span>
+        </div>
+      </div>`;
+    if(r.details&&r.details.length){
+      r.details.forEach((d,qi)=>{
+        let cls=d.sc>0?'correct':d.sc<0?'wrong':'skipped';
+        let icon=d.sc>0?'&#9989;':d.sc<0?'&#10060;':'&#9898;';
+        html+=`<div class="res-card ${cls} mb-2">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <strong class="small">${qi+1}. ${esc(d.qText)}</strong>
+            <span class="badge ${d.sc>0?'bg-success':d.sc<0?'bg-danger':'bg-secondary'} flex-shrink-0">${icon} ${d.sc>=0?'+':''}${typeof d.sc==='number'?d.sc.toFixed(2):d.sc}</span>
+          </div>`;
+        // show all options with indicators
+        if(d.options&&d.options.length){
+          html+=`<div class="mt-2">`;
+          d.options.forEach((opt,oi)=>{
+            let otxt=typeof opt==='object'?opt.text:opt;
+            let oimg=typeof opt==='object'?opt.imageData:null;
+            let isCorrect=Array.isArray(d.correctIdxs)?d.correctIdxs.includes(oi):(d.correctIdxs===oi);
+            let isMarked=Array.isArray(d.answeredIdxs)?d.answeredIdxs.includes(oi):(d.answeredIdxs===oi);
+            let marker='';
+            if(isCorrect&&isMarked)marker='<span class="badge bg-success ms-1">&#10004; Correct &#10004; Marked</span>';
+            else if(isCorrect)marker='<span class="badge bg-success ms-1">&#10004; Correct Answer</span>';
+            else if(isMarked)marker='<span class="badge bg-danger ms-1">&#10008; Your Answer</span>';
+            html+=`<div class="d-flex align-items-start gap-2 small mb-1 p-1 rounded" style="background:${isCorrect?'rgba(34,197,94,.12)':isMarked?'rgba(239,68,68,.12)':'rgba(0,0,0,.1)'}">
+              <span style="min-width:1.2rem;font-weight:600">${String.fromCharCode(65+oi)}.</span>
+              <span class="flex-fill">${oimg?`<img src="${oimg}" style="max-height:50px;border-radius:.3rem;margin-right:.3rem">`:''} ${esc(otxt)}</span>
+              ${marker}
+            </div>`;
+          });
+          html+=`</div>`;
+        } else {
+          // legacy: label-only
+          if(d.answeredLabel)html+=`<div class="small mt-1"><span class="text-info">&#128396; You answered:</span> ${esc(d.answeredLabel)}</div>`;
+          else html+=`<div class="small mt-1 text-muted">Not answered</div>`;
+          if(d.correctLabel)html+=`<div class="small mt-1"><span class="text-success">&#10004; Correct:</span> ${esc(d.correctLabel)}</div>`;
+        }
+        // solution
+        if(d.solutionText||d.solutionImageData){
+          html+=`<div class="sol-box mt-2"><small class="text-info fw-semibold"><i class="bi bi-lightbulb"></i> Solution</small>`;
+          if(d.solutionText)html+=`<div class="mt-1 small">${esc(d.solutionText)}</div>`;
+          if(d.solutionImageData){let se=d.solutionImageData.split(';')[0].split('/')[1];html+=se==='pdf'?'<span class="badge bg-secondary mt-1">PDF solution</span>':`<img src="${d.solutionImageData}" class="img-fluid rounded mt-1" style="max-height:200px">`;}
+          html+=`</div>`;
+        }
+        html+=`</div>`;
+      });
+    } else {
+      html+=`<p class="text-muted small">Detailed breakdown not available for this attempt.</p>`;
+    }
+    html+=`</div>`;
+  });
+  document.getElementById('perfBody').innerHTML=html;
+  show('perfOverlay');
+  document.getElementById('perfOverlay').scrollTop=0;
+}
+
+// ── TEST ENGINE ───────────────────────────────────────────────────────────────
+function startTest(testId){
+  let test=G('tests').find(t=>t.id===testId);if(!test)return;
+  let online=navigator.onLine;
+  if((test.networkMode||'any')==='offline'&&online){alert('Enable Airplane Mode to take this test.');return;}
+  if((test.networkMode||'any')==='online'&&!online){alert('Connect to internet to take this test.');return;}
+  AT=test;
+  let qs=[...test.questions];
+  if(test.shuffle)for(let i=qs.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]];}
+  AT._qs=qs;
+  stuAns=qs.map(q=>q.multiCorrect?[]:null);
+  curQ=0;
+  show('testModal');
+  document.getElementById('tModalTitle').textContent=test.title;
+  show('submitTestBtn');
+  document.getElementById('qNav').innerHTML='';
+  renderQ();
+  if(test.duration>0){
+    let left=test.duration*60;
+    show('timerEl');updTimer(left);
+    if(timerInt)clearInterval(timerInt);
+    timerInt=setInterval(()=>{left--;updTimer(left);if(left<=0){clearInterval(timerInt);submitTest();}},1000);
+  }else hide('timerEl');
+  document.getElementById('submitTestBtn').onclick=()=>{if(confirm('Submit test?'))submitTest();};
+}
+function updTimer(s){let m=Math.floor(s/60),sc=s%60;let el=document.getElementById('timerEl');if(el){el.textContent=`⏱ ${m}:${String(sc).padStart(2,'0')}`;el.className=`badge fs-6 ${s<=60?'bg-danger':'bg-warning text-dark'}`;}
+}
+function closeTest(){hide('testModal');if(timerInt)clearInterval(timerInt);AT=null;}
+function renderQ(){
+  if(!AT)return;
+  let qs=AT._qs,q=qs[curQ];
+  let body=document.getElementById('tModalBody');
+  let html=`<div class="glass-card p-3"><p class="small text-muted">Question ${curQ+1} of ${qs.length}</p>`;
+  if(q.imageData)html+=`<img src="${q.imageData}" class="img-fluid rounded mb-2" style="max-height:200px">`;
+  html+=`<p class="fw-semibold mb-2">${esc(q.text)}</p>`;
+  if(q.multiCorrect)html+=`<small class="badge bg-info text-dark mb-2">Select all correct answers</small>`;
+  html+=q.options.map((opt,oi)=>{
+    let t=q.multiCorrect?'checkbox':'radio';
+    let chk=q.multiCorrect?(stuAns[curQ]||[]).includes(oi):stuAns[curQ]===oi;
+    let otxt=typeof opt==='object'?opt.text:opt;
+    let oimg=typeof opt==='object'?opt.imageData:null;
+    return `<div class="form-check mb-1"><input class="form-check-input" type="${t}" name="tq" value="${oi}" id="o${oi}" ${chk?'checked':''}><label class="form-check-label" for="o${oi}">${oimg?`<img src="${oimg}" style="max-height:60px;border-radius:.3rem;margin-right:.3rem">`:''}${esc(otxt)}</label></div>`;
+  }).join('');
+  html+=`<div class="d-flex gap-2 mt-2">${curQ>0?`<button class="btn-gl btn-sm" onclick="saveAns();curQ--;renderQ()">&lsaquo; Prev</button>`:''}${curQ<qs.length-1?`<button class="btn-neon btn-sm" onclick="saveAns();curQ++;renderQ()">Next &rsaquo;</button>`:''}</div></div>`;
+  body.innerHTML=html;
+  document.getElementById('qNav').innerHTML=qs.map((_,i)=>{
+    let done=stuAns[i]!==null&&(Array.isArray(stuAns[i])?stuAns[i].length>0:true);
+    return `<button class="q-dot ${done?'ans':''} ${i===curQ?'cur':''}" onclick="saveAns();curQ=${i};renderQ()">${i+1}</button>`;
+  }).join('');
+}
+function saveAns(){
+  if(!AT)return;
+  let q=AT._qs[curQ];
+  if(q.multiCorrect)stuAns[curQ]=[...document.querySelectorAll('input[name="tq"]:checked')].map(x=>parseInt(x.value));
+  else{let s=document.querySelector('input[name="tq"]:checked');stuAns[curQ]=s?parseInt(s.value):null;}
+}
+function optLabel(q,idx){
+  if(idx===null||idx===undefined)return null;
+  if(Array.isArray(idx)){if(!idx.length)return null;return idx.map(i=>{let o=q.options[i];return typeof o==='object'?o.text:o;}).join(', ');}
+  let o=q.options[idx];return typeof o==='object'?o.text:o;
+}
+function submitTest(){
+  saveAns();
+  if(timerInt)clearInterval(timerInt);
+  let qs=AT._qs,neg=parseFloat(AT.negMarks)||0,partial=AT.partialMarking||false,mpq=parseFloat(AT.marksPerQ)||1;
+  let total=0,details=[];
+  qs.forEach((q,i)=>{
+    let ans=stuAns[i],sc=0;
+    if(q.multiCorrect){
+      let cs=Array.isArray(q.correct)?q.correct:[q.correct],sel=ans||[];
+      let right=sel.filter(x=>cs.includes(x)).length,wrong=sel.filter(x=>!cs.includes(x)).length;
+      if(partial)sc=Math.max(0,right*(mpq/cs.length)-wrong*neg);
+      else{if(right===cs.length&&wrong===0)sc=mpq;else if(wrong>0)sc=-neg;}
+    }else{
+      if(ans===null)sc=0;
+      else if(ans===q.correct)sc=mpq;
+      else sc=-neg;
+    }
+    total+=sc;
+    // store both index refs (for detailed option view) and labels
+    details.push({
+      qText:q.text,sc,
+      options:q.options,
+      answeredIdxs:ans,
+      correctIdxs:q.correct,
+      answeredLabel:optLabel(q,ans),
+      correctLabel:optLabel(q,q.correct),
+      solutionText:q.solutionText||null,
+      solutionImageData:q.solutionImageData||null
+    });
+  });
+  total=Math.max(0,total);
+  let max=qs.length*mpq,pct=Math.round(total/max*100);
+  let res=G('results');
+  res.push({userId:CU.id,testId:AT.id,score:total,total:max,date:new Date().toISOString(),details});
+  S('results',res);
+  // result screen
+  let body=document.getElementById('tModalBody');
+  let rh=`<div class="text-center mb-4"><h4 class="${pct>=50?'text-success':'text-danger'}">${pct>=50?'&#9989; Passed':'&#10060; Failed'}</h4><div class="fs-2 fw-bold">${total.toFixed(2)} / ${max}</div><div class="text-muted small">${pct}%</div></div>`;
+  rh+=`<p class="text-muted small mb-3"><i class="bi bi-info-circle"></i> Tap <strong>My Performance</strong> on the test card to review full per-question details.</p>`;
+  rh+=`<div>`;
+  details.forEach((d,i)=>{
+    let icon=d.sc>0?'&#9989;':d.sc<0?'&#10060;':'&#9898;';
+    let cls=d.sc>0?'correct':d.sc<0?'wrong':'skipped';
+    rh+=`<div class="res-card ${cls}"><div class="d-flex justify-content-between"><strong class="small">${i+1}. ${esc(d.qText)}</strong><span class="badge ${d.sc>0?'bg-success':d.sc<0?'bg-danger':'bg-secondary'}">${icon} ${d.sc>=0?'+':''}${d.sc.toFixed(2)}</span></div>`;
+    if(d.answeredLabel)rh+=`<div class="small mt-1"><span class="text-info">&#128396; You answered:</span> ${esc(d.answeredLabel)}</div>`;
+    else rh+=`<div class="small mt-1 text-muted">Not answered</div>`;
+    if(d.correctLabel)rh+=`<div class="small mt-1"><span class="text-success">&#10004; Correct:</span> ${esc(d.correctLabel)}</div>`;
+    if(d.solutionText||d.solutionImageData){
+      rh+=`<div class="sol-box mt-1"><small class="text-info fw-semibold"><i class="bi bi-lightbulb"></i> Solution</small>`;
+      if(d.solutionText)rh+=`<div class="mt-1 small">${esc(d.solutionText)}</div>`;
+      if(d.solutionImageData){let se=d.solutionImageData.split(';')[0].split('/')[1];rh+=se==='pdf'?'<span class="badge bg-secondary mt-1">PDF</span>':`<img src="${d.solutionImageData}" class="img-fluid rounded mt-1" style="max-height:180px">`;}
+      rh+=`</div>`;
+    }
+    rh+=`</div>`;
+  });
+  rh+=`</div>`;
+  body.innerHTML=rh;
+  hide('submitTestBtn');document.getElementById('qNav').innerHTML='';hide('timerEl');
+  let testId=AT.id;AT=null;
+  // add View Performance button
+  let vb=document.createElement('button');
+  vb.className='btn-neon btn-sm mt-3';vb.innerHTML='<i class="bi bi-bar-chart-line"></i> View Full Performance';
+  vb.onclick=()=>{hide('testModal');showPerformance(testId);};
+  body.appendChild(vb);
+}
+
+// ── ADMIN DASHBOARD ───────────────────────────────────────────────────────────
+function showAdm(){
+  hide('pgLogin');hide('pgStu');show('pgAdm');
+  document.getElementById('btnAdmLogout').onclick=logout;
+  document.getElementById('btnAdmChPw').onclick=()=>{
+    toggle('admPwBox');
+    if(document.getElementById('admPwBox').style.display!=='none')['aCurPw','aNewPw','aCfPw'].forEach(id=>document.getElementById(id).value='');
+  };
+  document.querySelectorAll('#admTabBar button').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.adm-tab').forEach(p=>p.style.display='none');
+    show(btn.dataset.tab);
+    document.querySelectorAll('#admTabBar button').forEach(b=>{b.classList.remove('btn-neon');b.classList.add('btn-gl');});
+    btn.classList.remove('btn-gl');btn.classList.add('btn-neon');
+    if(btn.dataset.tab==='tStudents')renderStuTbl();
+    if(btn.dataset.tab==='tTests')renderPub();
+  }));
+  function rSels(){
+    ['upBr','tBr','mgBr','subBr','sylBr','resBr'].forEach(id=>{let el=document.getElementById(id);if(el)fBr(el);});
+    ['upSm','tSm','mgSm','subSm','sylSm','resSm'].forEach(id=>{let el=document.getElementById(id);if(el)fSm(el);});
+  }
+  rSels();
+  function casc(bId,sId,el){if(bId&&sId)fSub(bId,sId,el);else el.innerHTML='<option value="">-- Subject --</option>';}
+  ['up','t','mg'].forEach(p=>{
+    document.getElementById(p+'Br').onchange=()=>casc(document.getElementById(p+'Br').value,document.getElementById(p+'Sm').value,document.getElementById(p+'Sub'));
+    document.getElementById(p+'Sm').onchange=()=>casc(document.getElementById(p+'Br').value,document.getElementById(p+'Sm').value,document.getElementById(p+'Sub'));
+  });
+  document.getElementById('sylBr').onchange=()=>casc(document.getElementById('sylBr').value,document.getElementById('sylSm').value,document.getElementById('sylSub'));
+  document.getElementById('sylSm').onchange=()=>casc(document.getElementById('sylBr').value,document.getElementById('sylSm').value,document.getElementById('sylSub'));
+  document.getElementById('sylSub').onchange=loadSylEd;
+  document.getElementById('resBr').onchange=()=>casc(document.getElementById('resBr').value,document.getElementById('resSm').value,document.getElementById('resSub'));
+  document.getElementById('resSm').onchange=()=>casc(document.getElementById('resBr').value,document.getElementById('resSm').value,document.getElementById('resSub'));
+  document.getElementById('resSub').onchange=()=>{
+    let sId=document.getElementById('resSub').value;
+    let ts=G('tests').filter(t=>t.subjectId==sId);
+    document.getElementById('resTest').innerHTML='<option value="">-- Test --</option>'+ts.map(t=>`<option value="${t.id}">${esc(t.title)}</option>`).join('');
+  };
+  // BRANCHES
+  function rBr(){let b=G('branches');document.getElementById('brList').innerHTML=b.map(x=>`<div class="d-flex justify-content-between align-items-center bg-dark p-1 rounded mb-1"><span>${esc(x.name)}</span><div><button class="btn btn-sm btn-outline-primary me-1 ebr" data-id="${x.id}">Edit</button><button class="btn btn-sm btn-outline-danger dbr" data-id="${x.id}">Del</button></div></div>`).join('')||'<p class="text-muted small">None</p>';}
+  rBr();
+  document.getElementById('addBrBtn').onclick=()=>{let n=document.getElementById('nBranch').value.trim();if(!n)return;let b=G('branches');b.push({id:maxId(b)+1,name:n});S('branches',b);rBr();rSels();document.getElementById('nBranch').value='';};
+  document.getElementById('brList').addEventListener('click',e=>{
+    if(e.target.classList.contains('ebr')){let id=parseInt(e.target.dataset.id),n=prompt('New name');if(n){let b=G('branches'),x=b.find(i=>i.id===id);if(x)x.name=n;S('branches',b);rBr();rSels();}}
+    if(e.target.classList.contains('dbr')){let id=parseInt(e.target.dataset.id);S('branches',G('branches').filter(x=>x.id!==id));rBr();rSels();}
+  });
+  // SEMESTERS
+  function rSm(){let s=G('semesters');document.getElementById('smList').innerHTML=s.map(x=>`<div class="d-flex justify-content-between align-items-center bg-dark p-1 rounded mb-1"><span>${esc(x.name)}</span><div><button class="btn btn-sm btn-outline-primary me-1 esm" data-id="${x.id}">Edit</button><button class="btn btn-sm btn-outline-danger dsm" data-id="${x.id}">Del</button></div></div>`).join('')||'<p class="text-muted small">None</p>';}
+  rSm();
+  document.getElementById('addSmBtn').onclick=()=>{let n=document.getElementById('nSem').value.trim();if(!n)return;let s=G('semesters');s.push({id:maxId(s)+1,name:n});S('semesters',s);rSm();rSels();document.getElementById('nSem').value='';};
+  document.getElementById('smList').addEventListener('click',e=>{
+    if(e.target.classList.contains('esm')){let id=parseInt(e.target.dataset.id),n=prompt('New name');if(n){let s=G('semesters'),x=s.find(i=>i.id===id);if(x)x.name=n;S('semesters',s);rSm();rSels();}}
+    if(e.target.classList.contains('dsm')){let id=parseInt(e.target.dataset.id);S('semesters',G('semesters').filter(x=>x.id!==id));rSm();rSels();}
+  });
+  // SUBJECTS
+  function rSubj(){let bId=document.getElementById('subBr').value,sId=document.getElementById('subSm').value;if(!bId||!sId){document.getElementById('subjList').innerHTML='<p class="text-muted small">Select branch &amp; semester</p>';return;}let s=G('subjects').filter(x=>x.branchId==bId&&x.semesterId==sId);document.getElementById('subjList').innerHTML=s.map(x=>`<div class="d-flex justify-content-between align-items-center p-1 border-bottom border-secondary"><span>${esc(x.name)}</span><button class="btn btn-sm btn-danger dsub" data-id="${x.id}">Del</button></div>`).join('')||'<p class="text-muted small">None</p>';}
+  document.getElementById('subBr').onchange=rSubj;document.getElementById('subSm').onchange=rSubj;
+  document.getElementById('addSubjBtn').onclick=()=>{let bId=document.getElementById('subBr').value,sId=document.getElementById('subSm').value,n=document.getElementById('nSubj').value.trim();if(!bId||!sId||!n)return;let s=G('subjects');s.push({id:maxId(s)+1,branchId:parseInt(bId),semesterId:parseInt(sId),name:n});S('subjects',s);rSubj();rSels();document.getElementById('nSubj').value='';};
+  document.getElementById('subjList').addEventListener('click',e=>{if(e.target.classList.contains('dsub')){if(confirm('Delete subject?')){S('subjects',G('subjects').filter(s=>s.id!=e.target.dataset.id));rSubj();rSels();}}});
+  // SYLLABUS
+  function loadSylEd(){let bId=document.getElementById('sylBr').value,sId=document.getElementById('sylSm').value,subId=document.getElementById('sylSub').value;if(!bId||!sId||!subId)return;let all=G('syllabus'),syl=all.find(s=>s.subjectId==subId);if(!syl){syl={subjectId:parseInt(subId),chapters:[]};all.push(syl);S('syllabus',all);}renderSylEd(syl);}
+  function renderSylEd(syl){let c=document.getElementById('sylEditor'),html='';syl.chapters.forEach((ch,ci)=>{html+=`<div class="glass p-2 mb-2"><div class="d-flex gap-2 mb-1"><input class="fg flex-fill" value="${esc(ch.title)}" id="ch${ci}"><button class="btn btn-sm btn-danger rch" data-ci="${ci}">&#10005;</button></div>`;ch.topics.forEach((tp,ti)=>{html+=`<div class="ms-2 border-start border-primary ps-2 mb-1"><div class="d-flex gap-2"><input class="fg flex-fill" value="${esc(tp.title)}" id="tp${ci}_${ti}"><button class="btn btn-sm btn-outline-danger rtp" data-ci="${ci}" data-ti="${ti}">&#10005;</button></div><input class="fg mt-1" value="${esc((tp.subtopics||[]).join(', '))}" placeholder="subtopics comma-separated" id="st${ci}_${ti}"></div>`;});html+=`<button class="btn btn-sm btn-outline-light mt-1 atp" data-ci="${ci}">+ Topic</button></div>`;});c.innerHTML=html+`<button id="achBtn" class="btn-neon btn-sm mt-1">+ Add Chapter</button>`;attachSyl(syl);}
+  function attachSyl(syl){document.getElementById('achBtn')?.addEventListener('click',()=>{syl.chapters.push({title:'New Chapter',topics:[]});pSyl(syl);loadSylEd();});document.querySelectorAll('.rch').forEach(b=>b.addEventListener('click',()=>{syl.chapters.splice(parseInt(b.dataset.ci),1);pSyl(syl);loadSylEd();}));document.querySelectorAll('.atp').forEach(b=>b.addEventListener('click',()=>{syl.chapters[parseInt(b.dataset.ci)].topics.push({title:'New Topic',subtopics:[]});pSyl(syl);loadSylEd();}));document.querySelectorAll('.rtp').forEach(b=>b.addEventListener('click',()=>{syl.chapters[parseInt(b.dataset.ci)].topics.splice(parseInt(b.dataset.ti),1);pSyl(syl);loadSylEd();}));}
+  function pSyl(syl){S('syllabus',G('syllabus').map(s=>s.subjectId===syl.subjectId?syl:s));}
+  document.getElementById('saveSylBtn').onclick=()=>{let subId=document.getElementById('sylSub').value;if(!subId)return;let all=G('syllabus'),syl=all.find(s=>s.subjectId==subId);if(!syl)return;syl.chapters.forEach((ch,ci)=>{let t=document.getElementById(`ch${ci}`);if(t)ch.title=t.value;ch.topics.forEach((tp,ti)=>{let tt=document.getElementById(`tp${ci}_${ti}`);if(tt)tp.title=tt.value;let st=document.getElementById(`st${ci}_${ti}`);if(st)tp.subtopics=st.value.split(',').map(s=>s.trim()).filter(Boolean);});});S('syllabus',all);fmsg('sylMsg','Saved!','success');};
+  // UPLOAD
+  document.getElementById('upForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    let bId=document.getElementById('upBr').value,sId=document.getElementById('upSm').value,subId=document.getElementById('upSub').value;
+    let cat=document.getElementById('upCat').value,title=document.getElementById('upTitle').value.trim();
+    let file=document.getElementById('upFile').files[0],allow=document.getElementById('upDl').checked;
+    if(!bId||!sId||!subId||!title||!file){fmsg('upMsg','Fill all fields','warning');return;}
+    let r=new FileReader();r.onload=ev=>{let ms=G('materials');ms.push({id:maxId(ms)+1,branchId:parseInt(bId),semesterId:parseInt(sId),subjectId:parseInt(subId),category:cat,title,fileData:ev.target.result,fileName:file.name,allowDownload:allow});S('materials',ms);fmsg('upMsg','&#10003; Uploaded!','success');document.getElementById('upForm').reset();};r.readAsDataURL(file);
+  });
+  // MANAGE
+  function rMg(){let bId=document.getElementById('mgBr').value,sId=document.getElementById('mgSm').value,subId=document.getElementById('mgSub').value;if(!bId||!sId||!subId){document.getElementById('mgTable').innerHTML='<p class="text-muted small">Select filters</p>';return;}let ms=G('materials').filter(m=>m.branchId==bId&&m.semesterId==sId&&m.subjectId==subId);if(!ms.length){document.getElementById('mgTable').innerHTML='<p class="text-muted small">No materials</p>';return;}let html='<table class="table table-sm tbl"><thead><tr><th>Title</th><th>Cat</th><th>Download</th><th>Toggle</th><th>Del</th></tr></thead><tbody>';ms.forEach(m=>{html+=`<tr><td>${esc(m.title)}</td><td>${m.category}</td><td>${m.allowDownload!==false?'&#10003;':'&#10007;'}</td><td><div class="tog ${m.allowDownload!==false?'on':''}" data-id="${m.id}"></div></td><td><button class="btn btn-sm btn-danger dlmat" data-id="${m.id}">&#10005;</button></td></tr>`;});html+='</tbody></table>';document.getElementById('mgTable').innerHTML=html;document.querySelectorAll('#mgTable .tog').forEach(t=>t.addEventListener('click',()=>{let ms2=G('materials'),m=ms2.find(x=>x.id===parseInt(t.dataset.id));if(m){m.allowDownload=!m.allowDownload;S('materials',ms2);rMg();}}));document.querySelectorAll('.dlmat').forEach(b=>b.addEventListener('click',()=>{if(confirm('Delete material?')){S('materials',G('materials').filter(m=>m.id!=b.dataset.id));rMg();}}));}
+  document.getElementById('mgRefBtn').onclick=rMg;
+  // TESTS
+  let partOn=false,shufOn=false;
+  document.getElementById('togPart').onclick=function(){partOn=!partOn;this.classList.toggle('on',partOn);};
+  document.getElementById('togShuf').onclick=function(){shufOn=!shufOn;this.classList.toggle('on',shufOn);};
+  function addQField(qd){
+    let div=document.createElement('div');div.className='glass p-2 mb-2';
+    let oh='';
+    for(let i=0;i<4;i++){
+      let ov=qd&&qd.options[i]?(typeof qd.options[i]==='object'?qd.options[i].text:qd.options[i]):'';
+      let ic=qd&&(Array.isArray(qd.correct)?qd.correct.includes(i):qd.correct===i);
+      oh+=`<div class="col-6 d-flex gap-1 align-items-center mb-1"><input class="fg flex-fill" placeholder="Option ${i+1}" data-opt="${i}" value="${esc(ov)}"><input type="file" accept="image/*" data-oimg="${i}" style="width:90px;font-size:.73rem" class="fg"><label class="small d-flex align-items-center gap-1"><input type="${qd&&qd.multiCorrect?'checkbox':'radio'}" data-cor="${i}" name="cor_${Date.now()}_${i}" ${ic?'checked':''}> &#10003;</label></div>`;
+    }
+    div.innerHTML=`
+      <div class="row g-1 mb-1">
+        <div class="col-md-8"><label class="small text-info">Question Text</label><input class="fg w-100 qtxt" placeholder="Type the question here..." value="${esc(qd?qd.text:'')}"></div>
+        <div class="col-md-4"><label class="small text-info">Question Image (optional)</label><input type="file" accept="image/*" class="fg qimg" style="font-size:.8rem"></div>
+      </div>
+      <div class="form-check mb-1"><input type="checkbox" class="form-check-input mctog" ${qd&&qd.multiCorrect?'checked':''}><label class="form-check-label small">Multiple correct answers</label></div>
+      <div class="row g-1">${oh}</div>
+      <div class="mt-2 p-2" style="border:1px dashed rgba(59,130,246,.35);border-radius:.8rem">
+        <small class="text-info"><i class="bi bi-lightbulb"></i> Solution / Explanation <span class="text-muted">(optional — students see this after submitting)</span></small>
+        <textarea class="fg w-100 mt-1 soltxt" placeholder="Write solution or explanation here..." rows="2">${qd&&qd.solutionText?esc(qd.solutionText):''}</textarea>
+        <input type="file" accept="image/*,application/pdf" class="fg mt-1 solfile" style="font-size:.8rem">
+        <div class="solprev mt-1"></div>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-danger mt-2 rmq">Remove Question</button>`;
+    document.getElementById('qWrap').appendChild(div);
+    div.querySelector('.mctog').addEventListener('change',function(){div.querySelectorAll('[data-cor]').forEach(inp=>{let chk=inp.checked;inp.type=this.checked?'checkbox':'radio';inp.name='cor_'+Date.now();inp.checked=chk;});});
+    div.querySelector('.qimg').addEventListener('change',function(){let f=this.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>div.dataset.qimg=ev.target.result;r.readAsDataURL(f);});
+    if(qd&&qd.imageData)div.dataset.qimg=qd.imageData;
+    div.querySelectorAll('[data-oimg]').forEach(inp=>inp.addEventListener('change',function(){let f=this.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>inp.dataset.imgd=ev.target.result;r.readAsDataURL(f);}));
+    if(qd&&qd.options)qd.options.forEach((o,i)=>{let oi=div.querySelector(`[data-oimg="${i}"]`);if(oi&&typeof o==='object'&&o.imageData)oi.dataset.imgd=o.imageData;});
+    let sf=div.querySelector('.solfile');
+    if(qd&&qd.solutionImageData){div.dataset.solimg=qd.solutionImageData;let sp=div.querySelector('.solprev');if(sp){let se=qd.solutionImageData.split(';')[0].split('/')[1];sp.innerHTML=se==='pdf'?'<span class="badge bg-secondary">PDF attached</span>':`<img src="${qd.solutionImageData}" style="max-height:70px;border-radius:.3rem">`;} }
+    sf.addEventListener('change',function(){let f=this.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{div.dataset.solimg=ev.target.result;let sp=div.querySelector('.solprev');if(sp){let se=f.name.split('.').pop().toLowerCase();sp.innerHTML=se==='pdf'?'<span class="badge bg-secondary">PDF attached</span>':`<img src="${ev.target.result}" style="max-height:70px;border-radius:.3rem">`;};};r.readAsDataURL(f);});
+    div.querySelector('.rmq').onclick=()=>div.remove();
+  }
+  document.getElementById('addQBtn').onclick=()=>addQField(null);
+  addQField(null);
+  document.getElementById('cancelEditBtn').onclick=resetTF;
+  function resetTF(){
+    document.getElementById('editTId').value='';
+    document.getElementById('testFTitle').textContent='Create MCQ Test';
+    document.getElementById('tSubmitBtn').textContent='Publish Test';
+    hide('cancelEditBtn');
+    document.getElementById('testForm').reset();
+    document.getElementById('tDur').value=0;
+    document.getElementById('tNeg').value=0;
+    document.getElementById('tMpq').value=1;
+    document.getElementById('qWrap').innerHTML='';
+    partOn=false;shufOn=false;
+    document.getElementById('togPart').classList.remove('on');
+    document.getElementById('togShuf').classList.remove('on');
+    addQField(null);
+  }
+  document.getElementById('testForm').onsubmit=e=>{
+    e.preventDefault();
+    let title=document.getElementById('tTitle').value.trim();
+    let bId=document.getElementById('tBr').value,sId=document.getElementById('tSm').value,subId=document.getElementById('tSub').value;
+    let dur=parseInt(document.getElementById('tDur').value)||0;
+    let neg=parseFloat(document.getElementById('tNeg').value)||0;
+    let mpq=parseFloat(document.getElementById('tMpq').value)||1;
+    let net=document.getElementById('tNet').value;
+    if(!title||!bId||!sId||!subId){fmsg('testFMsg','Fill all test details','warning');return;}
+    let questions=[];
+    document.querySelectorAll('#qWrap .glass').forEach(block=>{
+      let text=block.querySelector('.qtxt').value.trim();if(!text)return;
+      let multi=block.querySelector('.mctog').checked,opts=[],correct;
+      for(let i=0;i<4;i++){let oi=block.querySelector(`[data-opt="${i}"]`),ii=block.querySelector(`[data-oimg="${i}"]`);opts.push({text:oi?oi.value:'',imageData:ii?ii.dataset.imgd||null:null});}
+      if(multi)correct=[...block.querySelectorAll('[data-cor]:checked')].map(x=>parseInt(x.dataset.cor));
+      else{let s=block.querySelector('[data-cor]:checked');correct=s?parseInt(s.dataset.cor):0;}
+      questions.push({text,options:opts,correct,multiCorrect:multi,imageData:block.dataset.qimg||null,solutionText:block.querySelector('.soltxt').value.trim()||null,solutionImageData:block.dataset.solimg||null});
+    });
+    if(!questions.length){fmsg('testFMsg','Add at least one question','warning');return;}
+    let tests=G('tests'),eid=document.getElementById('editTId').value;
+    if(eid){let idx=tests.findIndex(t=>t.id==parseInt(eid));if(idx>=0)tests[idx]={...tests[idx],title,branchId:parseInt(bId),semesterId:parseInt(sId),subjectId:parseInt(subId),duration:dur,negMarks:neg,marksPerQ:mpq,partialMarking:partOn,shuffle:shufOn,networkMode:net,questions};}
+    else tests.push({id:maxId(tests)+1,title,branchId:parseInt(bId),semesterId:parseInt(sId),subjectId:parseInt(subId),duration:dur,negMarks:neg,marksPerQ:mpq,partialMarking:partOn,shuffle:shufOn,networkMode:net,questions});
+    S('tests',tests);fmsg('testFMsg',eid?'&#10003; Updated!':'&#10003; Published!','success');resetTF();renderPub();
+  };
+  function renderPub(){
+    let tests=G('tests');if(!tests.length){document.getElementById('pubTests').innerHTML='<p class="text-muted small">No tests yet.</p>';return;}
+    let brs=G('branches'),sms=G('semesters'),subs=G('subjects');
+    document.getElementById('pubTests').innerHTML=tests.map(t=>{
+      let br=brs.find(x=>x.id===t.branchId),sm=sms.find(x=>x.id===t.semesterId),sb=subs.find(x=>x.id===t.subjectId);
+      return `<div class="d-flex justify-content-between align-items-center glass p-2 mb-2 flex-wrap gap-2"><div><strong>${esc(t.title)}</strong><br><span class="small text-muted">${br?br.name:'-'} | ${sm?sm.name:'-'} | ${sb?sb.name:'-'} | ${t.questions.length}Q | ${t.marksPerQ||1} marks/Q${t.negMarks>0?' | &#8722;'+t.negMarks+' neg':''}</span></div><div class="d-flex gap-1"><button class="btn-neon btn-sm et" data-id="${t.id}">Edit</button><button class="btn btn-sm btn-danger dt" data-id="${t.id}">Del</button></div></div>`;
+    }).join('');
+    document.querySelectorAll('.et').forEach(b=>b.addEventListener('click',()=>loadTEdit(parseInt(b.dataset.id))));
+    document.querySelectorAll('.dt').forEach(b=>b.addEventListener('click',()=>{if(confirm('Delete test?')){S('tests',G('tests').filter(t=>t.id!=b.dataset.id));renderPub();}}));
+  }
+  function loadTEdit(id){
+    let t=G('tests').find(x=>x.id===id);if(!t)return;
+    document.querySelectorAll('.adm-tab').forEach(p=>p.style.display='none');show('tTests');
+    document.querySelectorAll('#admTabBar button').forEach(b=>{b.classList.remove('btn-neon');b.classList.add('btn-gl');});
+    let tb=document.querySelector('#admTabBar button[data-tab="tTests"]');if(tb){tb.classList.remove('btn-gl');tb.classList.add('btn-neon');}
+    document.getElementById('editTId').value=id;
+    document.getElementById('testFTitle').textContent='Edit Test: '+t.title;
+    document.getElementById('tSubmitBtn').textContent='Save Changes';
+    show('cancelEditBtn');
+    document.getElementById('tTitle').value=t.title;
+    document.getElementById('tBr').value=t.branchId;
+    fSm(document.getElementById('tSm'));document.getElementById('tSm').value=t.semesterId;
+    fSub(t.branchId,t.semesterId,document.getElementById('tSub'));document.getElementById('tSub').value=t.subjectId;
+    document.getElementById('tDur').value=t.duration||0;
+    document.getElementById('tNeg').value=t.negMarks||0;
+    document.getElementById('tMpq').value=t.marksPerQ||1;
+    document.getElementById('tNet').value=t.networkMode||'any';
+    partOn=t.partialMarking||false;shufOn=t.shuffle||false;
+    document.getElementById('togPart').classList.toggle('on',partOn);
+    document.getElementById('togShuf').classList.toggle('on',shufOn);
+    document.getElementById('qWrap').innerHTML='';
+    t.questions.forEach(q=>addQField(q));
+    document.getElementById('tTests').scrollIntoView({behavior:'smooth'});
+  }
+  // STUDENTS
+  function renderStuTbl(){
+    let users=G('users').filter(u=>u.role==='student');
+    if(!users.length){document.getElementById('stuTbl').innerHTML='<p class="text-muted">No students yet.</p>';return;}
+    let res=G('results');
+    let html='<div class="table-responsive"><table class="table table-sm tbl"><thead><tr><th>Username</th><th>Tests</th><th>Avg%</th><th>Status</th><th>Set Password</th><th>Controls</th><th>Delete</th></tr></thead><tbody>';
+    users.forEach(u=>{
+      let ur=res.filter(r=>r.userId===u.id);
+      let avg=ur.length?Math.round(ur.reduce((a,r)=>a+r.score/r.total*100,0)/ur.length)+'%':'--';
+      let st=u.banned?'<span class="badge bg-danger">Banned</span>':(u.blockedMaterials&&u.blockedTests)?'<span class="badge bg-warning text-dark">Both Blocked</span>':u.blockedMaterials?'<span class="badge bg-secondary">Mat Blocked</span>':u.blockedTests?'<span class="badge bg-secondary">Tests Blocked</span>':'<span class="badge bg-success">Active</span>';
+      html+=`<tr><td><strong>${esc(u.username)}</strong></td><td>${ur.length}</td><td>${avg}</td><td>${st}</td>
+        <td><div class="d-flex gap-1 align-items-center"><div class="pw-w" style="min-width:130px"><input type="password" class="fg" id="npw_${u.id}" placeholder="New password" style="font-size:.8rem;padding:.3rem .8rem"><button type="button" class="pw-eye" style="font-size:.8rem" onclick="tPw('npw_${u.id}',this)"><i class="bi bi-eye"></i></button></div><button class="btn btn-sm btn-outline-primary spw" data-id="${u.id}">Set</button></div></td>
+        <td><div class="d-flex gap-1 flex-wrap"><button class="btn btn-sm btn-outline-${u.blockedMaterials?'success':'warning'} tmat" data-id="${u.id}">${u.blockedMaterials?'Unblock Mat':'Block Mat'}</button><button class="btn btn-sm btn-outline-${u.blockedTests?'success':'warning'} ttst" data-id="${u.id}">${u.blockedTests?'Unblock Tests':'Block Tests'}</button><button class="btn btn-sm btn-${u.banned?'success':'danger'} tban" data-id="${u.id}">${u.banned?'Unban':'Ban'}</button></div></td>
+        <td><button class="btn btn-sm btn-danger dstu" data-id="${u.id}"><i class="bi bi-trash3-fill"></i> Delete</button></td></tr>`;
+    });
+    html+='</tbody></table></div>';
+    document.getElementById('stuTbl').innerHTML=html;
+    document.querySelectorAll('.spw').forEach(b=>b.addEventListener('click',()=>{let uid=parseInt(b.dataset.id),inp=document.getElementById('npw_'+uid),pw=inp.value.trim();if(!pw||pw.length<4){alert('Min 4 characters');return;}let us=G('users'),u=us.find(x=>x.id===uid);if(u){u.password=pw;S('users',us);inp.value='';alert(`Password for "${u.username}" updated!`);};}));
+    document.querySelectorAll('.tmat').forEach(b=>b.addEventListener('click',()=>{let us=G('users'),u=us.find(x=>x.id===parseInt(b.dataset.id));if(u){u.blockedMaterials=!u.blockedMaterials;S('users',us);renderStuTbl();}}));
+    document.querySelectorAll('.ttst').forEach(b=>b.addEventListener('click',()=>{let us=G('users'),u=us.find(x=>x.id===parseInt(b.dataset.id));if(u){u.blockedTests=!u.blockedTests;S('users',us);renderStuTbl();}}));
+    document.querySelectorAll('.tban').forEach(b=>b.addEventListener('click',()=>{let us=G('users'),u=us.find(x=>x.id===parseInt(b.dataset.id));if(u){u.banned=!u.banned;S('users',us);renderStuTbl();}}));
+    document.querySelectorAll('.dstu').forEach(b=>b.addEventListener('click',()=>{
+      let uid=parseInt(b.dataset.id),us=G('users'),u=us.find(x=>x.id===uid);if(!u)return;
+      if(!confirm(`Delete "${u.username}" and ALL their test results permanently? This cannot be undone.`))return;
+      S('users',us.filter(x=>x.id!==uid));S('results',G('results').filter(r=>r.userId!==uid));renderStuTbl();
+    }));
+  }
+  // RESULTS
+  window.renderResults=function(){
+    let tId=document.getElementById('resTest').value;
+    if(!tId){document.getElementById('resTable').innerHTML='<p class="text-muted small">Select a test</p>';return;}
+    let res=G('results').filter(r=>r.testId==tId),users=G('users');
+    if(!res.length){document.getElementById('resTable').innerHTML='<p class="text-muted small">No results yet</p>';return;}
+    let html='<table class="table table-sm tbl"><thead><tr><th>Student</th><th>Score</th><th>%</th><th>Date</th></tr></thead><tbody>';
+    res.forEach(r=>{let u=users.find(x=>x.id===r.userId);let pct=Math.round(r.score/r.total*100);html+=`<tr><td>${u?esc(u.username):'?'}</td><td>${typeof r.score==='number'?r.score.toFixed(2):r.score}/${r.total}</td><td>${pct}%</td><td>${new Date(r.date).toLocaleString()}</td></tr>`;});
+    html+='</tbody></table>';
+    document.getElementById('resTable').innerHTML=html;
+  };
+}
+</script>
+</body>
+</html>
